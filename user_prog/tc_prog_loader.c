@@ -4,6 +4,7 @@
 
 #include "common_user.h"
 #include "bpf/bpf_util.h"
+#include <bpf/libbpf.h>
 static const struct option long_options[] = {
     {"help", no_argument,  NULL, 'h' },
     {"list", no_argument,  NULL, 'l' },
@@ -21,6 +22,11 @@ static char ifname_buf[IF_NAMESIZE];
 static char *ifname = NULL;
 static int ifindex = -1;
 
+static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va_list args)
+{
+    return vfprintf(stderr, format, args);
+}
+
 int main(int argc, char **argv)
 {
     int opt, longindex = 0;
@@ -29,6 +35,8 @@ int main(int argc, char **argv)
     char kern_file_name[512];
     char sec_name[512];
     bool egress = false;
+
+    libbpf_set_print(libbpf_print_fn);
 
     /* Depend on sharing pinned maps */
     if (bpf_fs_check_and_fix()) {
