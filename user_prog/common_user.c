@@ -11,6 +11,8 @@
 #define PATH_MAX 4096
 #endif
 
+int verbose;
+
 bool locate_kern_object(char *execname, char *filename, size_t size)
 {
     char *basec, *bname;
