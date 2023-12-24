@@ -96,14 +96,14 @@ int tc_init_e_func(struct __sk_buff *skb) {
     struct egressinfo tmpnodeegressinfo_;
     initegressinfo(&tmpnodeegressinfo_, data, skb->ifindex);
     err = bpf_map_update_elem(&egress_cache, &outer_iph->daddr, &tmpnodeegressinfo_, BPF_NOEXIST);
-    // if(!err) {
-        // bpf_printkm("(tc_init_e)INFO: Updated an nodeegressinfo element");
-    // }
+    if(!err) {
+        bpf_printkm("(tc_init_e)INFO: Updated an nodeegressinfo element");
+    }
 
     err = bpf_map_update_elem(&egressip_cache, &inner_iph->daddr, &outer_iph->daddr, BPF_NOEXIST);
-    // if(!err) {
-        // bpf_printkm("(tc_init_e)INFO: Added an podip element. RemoteIP is %x", inner_iph->daddr);
-    // }
+    if(!err) {
+        bpf_printkm("(tc_init_e)INFO: Added an podip element. RemoteIP is %x", inner_iph->daddr);
+    }
     set_ip_tos(skb, 50, 0);
 out:
     return TC_ACT_OK;
